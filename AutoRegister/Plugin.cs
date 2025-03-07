@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using System.Security.Cryptography;
 using TShockAPI.DB;
-
+//plugin atualizado por brasilzinhoz
 namespace AutoRegister
 {
     [ApiVersion(2, 1)]
