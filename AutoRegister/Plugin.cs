@@ -1,22 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Security.Cryptography;
+using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
 using Terraria;
 using TerrariaApi.Server;
 using TShockAPI;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
-using System.Security.Cryptography;
 using TShockAPI.DB;
-//plugin atualizado por brasilzinhoz
+
 namespace AutoRegister
 {
     [ApiVersion(2, 1)]
     public class Plugin : TerrariaPlugin
     {
         public override string Name => "AutoRegister";
-        public override Version Version => new Version(1, 0, 0, 0);
-        public override string Author => "brian91292 & moisterrific";
+        public override Version Version => new Version(1, 0, 1, 0);
+        public override string Author => "brian91292 & moisterrific, atualizado por brasilzinhoz";
         public override string Description => "A TShock plugin to automatically register a user account for new players.";
 
         public Plugin(Main game) : base(game) { }
@@ -26,10 +26,10 @@ namespace AutoRegister
         public override void Initialize()
         {
             ServerApi.Hooks.ServerJoin.Register(this, OnServerJoin);
-            ServerApi.Hooks.NetGreetPlayer.Register(this, OnGreetPlayer, 420);
+            ServerApi.Hooks.NetGreetPlayer.Register(this, OnGreetPlayer);
         }
 
-        async void OnGreetPlayer(GreetPlayerEventArgs args)
+        private async void OnGreetPlayer(GreetPlayerEventArgs args)
         {
             var tsConfig = TShock.Config.Settings;
             var player = TShock.Players[args.Who];
@@ -64,7 +64,7 @@ namespace AutoRegister
             }
         }
 
-        void OnServerJoin(JoinEventArgs args)
+        private void OnServerJoin(JoinEventArgs args)
         {
             var tsConfig = TShock.Config.Settings;
             var player = TShock.Players[args.Who];
@@ -106,7 +106,7 @@ namespace AutoRegister
         private static string GenerateSecureRandomString(int length = 10)
         {
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-            using var rng = new RNGCryptoServiceProvider();
+            using var rng = RandomNumberGenerator.Create();
             var data = new byte[length];
             rng.GetBytes(data);
             return new string(data.Select(b => chars[b % chars.Length]).ToArray());
